@@ -29,7 +29,6 @@ const Uploader = ({ onChange }) => {
         setImageUrl(data.location);
         onChange(data.location);
         setIsLoading(false);
-        console.log('data.location:', data.location);
       })
       .catch((err) =>
         message.error("Error occurred while trying to upload file")
@@ -46,7 +45,7 @@ const Uploader = ({ onChange }) => {
   const uploadButton = (
     <div>
       {isLoading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div className="ant-upload-text">Upload</div>
+      <div className="ant-upload-text">Upload beach image</div>
     </div>
   );
   return (
@@ -85,6 +84,9 @@ const StyledSpan = styled.span`
 const StyledUpload = styled(Upload)`
   .ant-upload.ant-upload-select-picture-card {
     background-color: transparent;
+    width: 200px;
+    border-radius: 4px;
+    margin-top: 10px;
   }
 `;
 

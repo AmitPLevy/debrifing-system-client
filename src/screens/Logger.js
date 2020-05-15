@@ -193,24 +193,24 @@ const Logger = (props) => {
         pagination={false}
         // expandedRowRender={(event) => <ExpandedEvent event={event} />}
       />
-      {videoModalVisible && (
-        <StyledModal
-          onCancel={onVideoModalClose}
-          visible={videoModalVisible}
-          footer={null}
-          title={"Event video"}
-        >
-          <StyledIframe
-            autoplay
-            allow="autoplay"
-            width="619"
-            height="350"
-            src={
-              "https://drone-guard-videos.s3-eu-west-1.amazonaws.com/uploads/converted.mp4"
-            }
-          />
-        </StyledModal>
-      )}
+
+      <StyledModal
+        onCancel={onVideoModalClose}
+        visible={videoModalVisible}
+        footer={null}
+        title={"Event video"}
+        destroyOnClose
+      >
+        <StyledIframe
+          autoplay
+          allow="autoplay"
+          width="619"
+          height="350"
+          src={ selectedVideoUrl ||
+            "https://drone-guard-videos.s3-eu-west-1.amazonaws.com/uploads/converted.mp4"
+          } // TODO remove link
+        />
+      </StyledModal>
     </Container>
   );
 };

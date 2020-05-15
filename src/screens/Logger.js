@@ -164,9 +164,15 @@ const Logger = (props) => {
       title: "",
       dataIndex: "video",
       key: "video",
-      render: (_, { videoUrl }) => {
+      render: (_, { videoUrl, thumbnailUrl }) => {
         return (
           <Thumbnail onClick={() => onVideoModalOpen(videoUrl)}>
+            <ThumbnailImage
+              src={
+                thumbnailUrl ||
+                "https://drone-guard-videos.s3-eu-west-1.amazonaws.com/uploads/screenShot_00%3A00%3A00.jpeg"
+              }
+            />
             <PlayCircleOutlined />
           </Thumbnail>
         );
@@ -195,6 +201,8 @@ const Logger = (props) => {
           title={"Event video"}
         >
           <StyledIframe
+            autoplay
+            allow="autoplay"
             width="619"
             height="350"
             src={
@@ -234,7 +242,6 @@ const Container = styled.div`
 `;
 
 const Thumbnail = styled.div`
-  background-image: url("https://drone-guard-videos.s3-eu-west-1.amazonaws.com/uploads/screenShot_00%3A00%3A00.jpeg");
   background-size: cover;
   height: 100px;
   width: 150px;
@@ -286,6 +293,11 @@ const StyledButton = styled(Button)`
   width: 100px;
   align-self: flex-end;
   border-radius: 4px;
+`;
+
+const ThumbnailImage = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 export default Logger;

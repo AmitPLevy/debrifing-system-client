@@ -113,8 +113,6 @@ const BeachesContainer = styled.div`
   max-height: ${(props) => props.theme.sizes.containerHeight};
   justify-content: center;
   overflow-y: auto;
-  //margin-top: 100px;
-  height: 85%;
 `;
 
 const StyledModal = styled(Modal)`

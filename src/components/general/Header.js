@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import LogoImg from "../../assets/Logo.png";
+import LogoImg from "../../assets/Logo_Black.png";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { Avatar, Dropdown, Menu } from "antd";
@@ -49,12 +49,15 @@ const StyledHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 20px 0;
-  background-color: rgba(100, 100, 100, 0.2);
+  // background-color: rgba(100, 100, 100, 1);
+  background-color: #f3f3f3;
+  border-bottom: 1px solid rgba(0, 0, 0, .1)
+  // position: fixed;
 `;
 
 const Logo = styled.img`
   width: 100px;
-  height: 60px;
+  height: 70px;
   cursor: pointer;
   margin-left: 50px;
 `;

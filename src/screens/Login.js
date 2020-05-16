@@ -87,7 +87,7 @@ const LoginContainer = styled.div`
   background-image: url(${backgroundImage});
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  background-position: bottom;
   color: #fff;
   font-size: 17px;
 `;
@@ -97,65 +97,79 @@ const Card = styled.div`
   top: 50%;
   transform: translateY(-50%);
   box-sizing: border-box;
-  width: 35%;
+  width: 28%;
+  min-width: 350px;
   height: 70%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   border-radius: 8px;
   z-index: 2;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.2);
 
   label {
     font-size: 17px;
   }
 `;
 
-const StyledInput = styled(Input)`
-  width: 100%;
-  height: 40px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  margin-top: 10px;
-  font-size: 15px;
-
-  :hover,
-  :active,
-  :focus,
-  :visited {
-    border: none;
-  }
+const Logo = styled.img`
+  max-width: 70%;
 `;
+
+
 
 const StyledForm = styled(Form)`
-  width: 45%;
+  width: 60%;
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-contanet: center;
 
   .ant-form-item-explain {
-    font-size: 12px;
-    position: absolute;
-    color: red;
-    margin-top: 48px;
-    margin-left: 2px;
-  }
+      font-size: 12px;
+      position: absolute;
+      color: red;
+      margin-top: 48px;
+      margin-left: 2px;
+    }
 `;
-
-const StyledFormItem = styled(Form.Item)`
-  margin-top: 25px;
-`;
-
-const Logo = styled.img`
-  width: 60%;
-  margin-bottom: 10px;
-`;
+  
+  const StyledFormItem = styled(Form.Item)`
+  // margin-top: 25px;
+  `;
+  
+  const StyledInput = styled(Input)`
+    width: 100%;
+    height: 40px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #fff;
+    font-size: 15px;
+    color: #fff;
+  
+    ::placeholder {
+      color: rgba(255, 255, 255, .8);
+    }
+    
+    :focus {
+      outline: none;
+    }
+    
+    :hover,
+    :active,
+    :visited {
+      border-bottom: 1px solid #fff;
+    }
+  `;
 
 const StyledButton = styled(Button)`
   width: 60%;
   height: 40px;
   border: 2px solid #fff;
   border-radius: 20px;
-  margin-top: 40px;
+  margin-top: 20px;
   position: relative;
   left: 50%;
   transform: translateX(-50%);

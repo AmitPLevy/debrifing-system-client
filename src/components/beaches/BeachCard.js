@@ -21,6 +21,8 @@ const BeachCard = ({ beach, index, onBeachClick, empty }) => {
 const BeachContainer = styled.div`
   width: 340px;
   height: 225px;
+  // width: 300px;
+  // height: 185px;
   display: flex;
   border-radius: 8px;
   cursor: pointer;
@@ -37,7 +39,7 @@ const BeachName = styled.div`
   align-items: center;
   height: 50px;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(200, 200, 200, 0.4);
   color: #fff;
   font-size: 19px;
 `;

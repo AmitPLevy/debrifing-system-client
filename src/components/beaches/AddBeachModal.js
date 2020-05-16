@@ -12,6 +12,9 @@ const AddBeachModal = ({ onBeachAdd }) => {
   const [beachImage, setBeachImage] = useState(null);
   const [form] = Form.useForm();
 
+  const defaultBeachImage =
+    "https://drone-guard-videos.s3-eu-west-1.amazonaws.com/defaultBeachImage.jpeg";
+
   useEffect(() => {
     _get("/lifeGuards").then((response) => {
       setLifeGuards(response.data);
@@ -26,11 +29,11 @@ const AddBeachModal = ({ onBeachAdd }) => {
       name,
       droneNumber,
       lifeGuards,
-      beachImage
+      image: beachImage || defaultBeachImage,
     })
       .then((response) => {
         onBeachAdd();
-        message.info("Beach added");
+        message.success("Beach added");
       })
       .catch((error) => {
         setIsSubmitting(false);
@@ -66,18 +69,20 @@ const AddBeachModal = ({ onBeachAdd }) => {
       <Form.Item
         name={["name"]}
         rules={[{ required: true, message: "Required field" }]}
-        label={"Beach name"}
       >
-        <Input isRequired={true} />
+        <StyledInput isRequired={true} placeholder={"Beach name"} />
       </Form.Item>
       <Form.Item
         name={["lifeGuards"]}
         rules={[{ required: true, message: "Required field" }]}
-        label="Life Guards"
       >
-        <Select mode="multiple" disabled={isLoading}>
+        <StyledSelect
+          mode="multiple"
+          disabled={isLoading}
+          placeholder={"Life Guards"}
+        >
           {renderLifeGuardsOptions()}
-        </Select>
+        </StyledSelect>
       </Form.Item>
       <Form.Item
         name={["droneNumber"]}
@@ -88,11 +93,10 @@ const AddBeachModal = ({ onBeachAdd }) => {
             message: "Invalid drone number",
           },
         ]}
-        label={"Drone number"}
       >
-        <Input />
+        <StyledInput placeholder={"Drone number"} />
       </Form.Item>
-      <Form.Item name={["beachImage"]} label={"Beach image"}>
+      <Form.Item name={["beachImage"]} l>
         <Uploader onChange={onBeachImageChange} />
       </Form.Item>
 
@@ -125,6 +129,20 @@ const StyledButton = styled(Button)`
   :focus {
     background-color: #bcbcbc;
     border-color: #bcbcbc;
+  }
+`;
+
+const StyledInput = styled(Input)`
+  border-radius: 4px;
+  height: 40px;
+`;
+
+const StyledSelect = styled(Select)`
+  border-radius: 4px;
+  height: 40px;
+
+  .ant-select-selector {
+    height: 100%;
   }
 `;
 

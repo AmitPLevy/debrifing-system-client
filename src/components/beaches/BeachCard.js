@@ -9,7 +9,7 @@ const BeachCard = ({ beach, index, onBeachClick, empty }) => {
 
   const renderCard = () => {
     return (
-      <BeachContainer onClick={() => onBeachClick(index)}>
+      <BeachContainer image={beach.image} onClick={() => onBeachClick(index)}>
         <BeachName>{beach.name}</BeachName>
       </BeachContainer>
     );
@@ -27,7 +27,7 @@ const BeachContainer = styled.div`
   border-radius: 8px;
   cursor: pointer;
   margin: 10px;
-  background-image: url(${backgroundImage});
+  background-image: url(${(props) => props.image});
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

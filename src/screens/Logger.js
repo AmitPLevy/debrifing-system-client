@@ -164,9 +164,15 @@ const Logger = (props) => {
       title: "",
       dataIndex: "video",
       key: "video",
-      render: (_, { videoUrl }) => {
+      render: (_, { videoUrl, thumbnailUrl }) => {
         return (
           <Thumbnail onClick={() => onVideoModalOpen(videoUrl)}>
+            <ThumbnailImage
+              src={
+                thumbnailUrl ||
+                "https://drone-guard-videos.s3-eu-west-1.amazonaws.com/uploads/screenShot_00%3A00%3A00.jpeg"
+              }
+            />
             <PlayCircleOutlined />
           </Thumbnail>
         );
@@ -187,22 +193,24 @@ const Logger = (props) => {
         pagination={false}
         // expandedRowRender={(event) => <ExpandedEvent event={event} />}
       />
-      {videoModalVisible && (
-        <StyledModal
-          onCancel={onVideoModalClose}
-          visible={videoModalVisible}
-          footer={null}
-          title={"Event video"}
-        >
-          <StyledIframe
-            width="619"
-            height="350"
-            src={
-              "https://drone-guard-videos.s3-eu-west-1.amazonaws.com/uploads/converted.mp4"
-            }
-          />
-        </StyledModal>
-      )}
+
+      <StyledModal
+        onCancel={onVideoModalClose}
+        visible={videoModalVisible}
+        footer={null}
+        title={"Event video"}
+        destroyOnClose
+      >
+        <StyledIframe
+          autoplay
+          allow="autoplay"
+          width="619"
+          height="350"
+          src={ selectedVideoUrl ||
+            "https://drone-guard-videos.s3-eu-west-1.amazonaws.com/uploads/converted.mp4"
+          } // TODO remove link
+        />
+      </StyledModal>
     </Container>
   );
 };
@@ -234,7 +242,6 @@ const Container = styled.div`
 `;
 
 const Thumbnail = styled.div`
-  background-image: url("https://drone-guard-videos.s3-eu-west-1.amazonaws.com/uploads/screenShot_00%3A00%3A00.jpeg");
   background-size: cover;
   height: 100px;
   width: 150px;
@@ -286,6 +293,11 @@ const StyledButton = styled(Button)`
   width: 100px;
   align-self: flex-end;
   border-radius: 4px;
+`;
+
+const ThumbnailImage = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 export default Logger;

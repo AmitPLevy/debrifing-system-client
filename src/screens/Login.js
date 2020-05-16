@@ -177,6 +177,7 @@ const StyledButton = styled(Button)`
   color: #fff;
   cursor: pointer;
   font-size: 17px;
+  min-width: 130px;
 
   :hover,
   :active,

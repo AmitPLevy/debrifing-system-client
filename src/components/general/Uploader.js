@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Upload, message } from "antd";
 import styled from "styled-components";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import S3FileUpload from "react-s3";
 import { consts } from "../../../src/consts";
+import S3 from "react-aws-s3";
 
 const Uploader = ({ onChange }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
 
   const config = {
-    bucketName: "drone-guard-assets",
+    bucketName: "drone-guard-videos",
     region: "eu-west-1",
     accessKeyId: consts.aws.accessKey,
     secretAccessKey: consts.aws.secretKey,
@@ -18,12 +18,17 @@ const Uploader = ({ onChange }) => {
   };
 
   const customRequest = (fileData) => {
-    console.log("file:", fileData);
+    setIsLoading(true);
+    const { file } = fileData;
 
-    S3FileUpload.uploadFile(fileData.file, config)
+    const ReactS3Client = new S3(config);
+    const newFileName = `${file.name}.${Date.now()}`;
+
+    ReactS3Client.uploadFile(file, newFileName)
       .then((data) => {
         setImageUrl(data.location);
         onChange(data.location);
+        setIsLoading(false);
       })
       .catch((err) =>
         message.error("Error occurred while trying to upload file")
@@ -40,17 +45,15 @@ const Uploader = ({ onChange }) => {
   const uploadButton = (
     <div>
       {isLoading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div className="ant-upload-text">Upload</div>
+      <div className="ant-upload-text">Upload beach image</div>
     </div>
   );
   return (
-    <Upload
+    <StyledUpload
       listType="picture-card"
       showUploadList={false}
       customRequest={customRequest}
-      transformFile={(file) => {
-        return { ...file, name: "name" };
-      }}
+      disabled={isLoading || imageUrl}
     >
       {imageUrl ? (
         <ImageContainer>
@@ -60,7 +63,7 @@ const Uploader = ({ onChange }) => {
       ) : (
         uploadButton
       )}
-    </Upload>
+    </StyledUpload>
   );
 };
 
@@ -76,6 +79,15 @@ const StyledSpan = styled.span`
   position: absolute;
   top: -7px;
   right: -2px;
+`;
+
+const StyledUpload = styled(Upload)`
+  .ant-upload.ant-upload-select-picture-card {
+    background-color: transparent;
+    width: 200px;
+    border-radius: 4px;
+    margin-top: 10px;
+  }
 `;
 
 export default Uploader;

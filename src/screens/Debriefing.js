@@ -84,16 +84,16 @@ const Debriefing = ({ className }) => {
         />
         {renderShadows()}
       </BeachesContainer>
-      {addBeachModalVisible && (
-        <StyledModal
-          onCancel={() => setAddBeachModalVisible(false)}
-          visible={addBeachModalVisible}
-          title={"Add new beach"}
-          footer={null}
-        >
-          <AddBeachModal onBeachAdd={onBeachAdd} />
-        </StyledModal>
-      )}
+
+      <StyledModal
+        onCancel={() => setAddBeachModalVisible(false)}
+        visible={addBeachModalVisible}
+        title={"Add new beach"}
+        footer={null}
+        destroyOnClose
+      >
+        <AddBeachModal onBeachAdd={onBeachAdd} />
+      </StyledModal>
     </DebriefingContainer>
   );
 };
@@ -117,6 +117,7 @@ const BeachesContainer = styled.div`
   justify-content: center;
   // overflow-y: auto;
   // margin-top: 50px;
+  overflow-y: auto;
 `;
 
 const StyledModal = styled(Modal)`

@@ -69,7 +69,7 @@ const Debriefing = ({ className }) => {
     <DebriefingContainer>
       <BeachesContainer>
       <StyledText>Beach list</StyledText>
-        {beaches.length > 0 &&
+        {beaches && beaches.length > 0 &&
           beaches.map((beach, i) => (
             <BeachCard
               beach={beach}
@@ -110,7 +110,7 @@ const DebriefingContainer = styled.div`
 const BeachesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  padding: 20px 0;
+  //padding: 20px 0;
   width: 95%;
   // max-width: 95%;
   // max-height: ${(props) => props.theme.sizes.containerHeight};
@@ -118,6 +118,7 @@ const BeachesContainer = styled.div`
   // overflow-y: auto;
   // margin-top: 50px;
   overflow-y: auto;
+  margin-bottom: 40px;
 `;
 
 const StyledModal = styled(Modal)`
@@ -131,13 +132,11 @@ const ShadowBox = styled.div`
   margin: 10px;
 `;
 
-const StyledText = styled.h1`
-  font-size: 38px;
+export const StyledText = styled.h1`
+  font-size: 32px;
   text-align: left;
   width: 95%;
   // align-self: flex-start;
-  margin-left: 80px;
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin: 30px 60px;
 `;
 export default Debriefing;

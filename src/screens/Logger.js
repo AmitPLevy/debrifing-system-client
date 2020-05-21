@@ -8,6 +8,7 @@ import moment from "moment";
 import EditIcon from "../assets/edit-tools.svg";
 import TrashIcon from "../assets/send-to-trash.svg";
 import { PlayCircleOutlined } from "@ant-design/icons";
+import { StyledText } from "./Debriefing";
 
 const Logger = (props) => {
   const selectedBeach = props.history.location.state;
@@ -39,6 +40,23 @@ const Logger = (props) => {
     });
     fetchEvents();
   }, []);
+
+  const getDurationInMinutes = (startTime, endTime) => {
+    return moment
+      .duration(
+        moment(endTime, "YYYY/MM/DD HH:mm").diff(
+          moment(startTime, "YYYY/MM/DD HH:mm")
+        )
+      )
+      .asMinutes();
+  };
+
+  const getLifeGuardById = (id) => {
+    return (
+      beachLifeGuards.length &&
+      beachLifeGuards.find((beachLifeGuard) => beachLifeGuard._id === id)
+    );
+  };
 
   const onVideoModalOpen = (videoUrl) => {
     setVideoModalVisible(true);
@@ -72,6 +90,7 @@ const Logger = (props) => {
       dataIndex: "date",
       key: "date",
       render: (_, { startTime }) => moment(startTime).format("MMM DD, YYYY"),
+      sorter: (a, b) => moment(a.startTime) - moment(b.startTime),
     },
     {
       title: "Start time",
@@ -90,14 +109,12 @@ const Logger = (props) => {
       dataIndex: "duration",
       key: "duration",
       render: (_, { startTime, endTime }) => {
-        const minutes = moment
-          .duration(
-            moment(endTime, "YYYY/MM/DD HH:mm").diff(
-              moment(startTime, "YYYY/MM/DD HH:mm")
-            )
-          )
-          .asMinutes();
-        return `${minutes} Minutes`;
+        return `${getDurationInMinutes(startTime, endTime)} Minutes`;
+      },
+      sorter: (a, b) => {
+        const aMinutes = getDurationInMinutes(a.startTime, a.endTime);
+        const bMinutes = getDurationInMinutes(b.startTime, b.endTime);
+        return bMinutes - aMinutes;
       },
     },
     {
@@ -105,12 +122,15 @@ const Logger = (props) => {
       dataIndex: "lifeGuard",
       key: "lifeGuard",
       render: (_, { lifeGuardId }) => {
-        const lifeGuard =
-          beachLifeGuards.length &&
-          beachLifeGuards.find(
-            (beachLifeGuard) => beachLifeGuard._id === lifeGuardId
-          );
+        const lifeGuard = getLifeGuardById(lifeGuardId);
         return lifeGuard && lifeGuard.name;
+      },
+      sorter: (a, b) => {
+        const aLifeGuard = getLifeGuardById(a.lifeGuardId);
+        const bLifeGuard = getLifeGuardById(b.lifeGuardId);
+        return !aLifeGuard || !bLifeGuard
+          ? -1
+          : aLifeGuard.name > bLifeGuard.name;
       },
     },
     {
@@ -127,9 +147,9 @@ const Logger = (props) => {
               placement={"bottom"}
               content={
                 <NoteContainer>
-                  <textarea onChange={(e) => setNote(e.target.value)}>
+                  <TextArea onChange={(e) => setNote(e.target.value)}>
                     {note}
-                  </textarea>
+                  </TextArea>
                   <StyledButton onClick={() => onAddEventNote(_id)}>
                     save note
                   </StyledButton>
@@ -185,7 +205,7 @@ const Logger = (props) => {
     <Loader />
   ) : (
     <Container>
-      <Heading>Events Logger- {selectedBeach.name}</Heading>
+      <StyledText>Events- {selectedBeach.name} beach</StyledText>
 
       <StyledTable
         columns={columns}
@@ -206,7 +226,8 @@ const Logger = (props) => {
           allow="autoplay"
           width="619"
           height="350"
-          src={ selectedVideoUrl ||
+          src={
+            selectedVideoUrl ||
             "https://drone-guard-videos.s3-eu-west-1.amazonaws.com/uploads/converted.mp4"
           } // TODO remove link
         />
@@ -214,12 +235,6 @@ const Logger = (props) => {
     </Container>
   );
 };
-
-const Heading = styled.div`
-  font-size: 20px;
-  text-align: center;
-  padding: 30px 0;
-`;
 
 const StyledModal = styled(Modal)`
   width: 50% !important;
@@ -238,7 +253,12 @@ const ButtonsContainer = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 0 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
+  background: #f3f3f3;
+  padding: 0px 20px;
 `;
 
 const Thumbnail = styled.div`
@@ -270,9 +290,22 @@ const StyledIframe = styled.iframe`
 `;
 
 const StyledTable = styled(Table)`
+  width: 95%;
+  border-radius: 4px;
   td,
-  tr {
+  tr,
+  th {
     font-size: 15px;
+    background-color: #f3f3f3 !important;
+    text-align: center !important;
+    border-bottom: 1px solid #cccccc !important;
+  }
+
+  table {
+    border-radius: 4px;
+    border-right: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
   }
 `;
 
@@ -298,6 +331,10 @@ const StyledButton = styled(Button)`
 const ThumbnailImage = styled.img`
   width: 100%;
   height: 100%;
+`;
+
+const TextArea = styled.textarea`
+  resize: none;
 `;
 
 export default Logger;

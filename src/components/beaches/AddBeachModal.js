@@ -96,7 +96,7 @@ const AddBeachModal = ({ onBeachAdd }) => {
       >
         <StyledInput placeholder={"Drone number"} />
       </Form.Item>
-      <Form.Item name={["beachImage"]} l>
+      <Form.Item name={["beachImage"]}>
         <Uploader onChange={onBeachImageChange} />
       </Form.Item>
 

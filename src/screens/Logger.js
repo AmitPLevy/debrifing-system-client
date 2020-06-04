@@ -184,15 +184,10 @@ const Logger = (props) => {
       title: "",
       dataIndex: "video",
       key: "video",
-      render: (_, { videoUrl, thumbnailUrl }) => {
+      render: (_, { videoUrl, thumbnailURL }) => {
         return (
           <Thumbnail onClick={() => onVideoModalOpen(videoUrl)}>
-            <ThumbnailImage
-              src={
-                thumbnailUrl ||
-                "https://drone-guard-videos.s3-eu-west-1.amazonaws.com/uploads/screenShot_00%3A00%3A00.jpeg"
-              }
-            />
+            <ThumbnailImage src={thumbnailURL} />
             <PlayCircleOutlined />
           </Thumbnail>
         );

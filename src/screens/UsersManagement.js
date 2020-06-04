@@ -69,7 +69,7 @@ const UsersManagement = (props) => {
       render: (_, { beaches }) =>
         beaches
           ? beaches.map((beach, i) => (
-              <span>
+              <span key={i}>
                 {i !== 0 && ", "}
                 {beach.name}
               </span>

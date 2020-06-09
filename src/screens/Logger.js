@@ -9,6 +9,7 @@ import EditIcon from "../assets/edit-tools.svg";
 import TrashIcon from "../assets/send-to-trash.svg";
 import { PlayCircleOutlined } from "@ant-design/icons";
 import { StyledText } from "./Debriefing";
+import VideoTelemetry from "components/events/VideoTelemetry";
 
 const Logger = (props) => {
   const selectedBeach = props.history.location.state;
@@ -17,6 +18,7 @@ const Logger = (props) => {
   const [beachLifeGuards, setBeachLifeGuards] = useState([]);
   const [videoModalVisible, setVideoModalVisible] = useState(false);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState(null);
+  const [selectedTelemetryUrl, setSelectedTelemetryUrl] = useState(null);
   const [notePopOverVisible, setNotePopOverVisible] = useState(false);
   const [visibleNoteKey, setVisibleNoteKey] = useState(null);
   const [note, setNote] = useState(null);
@@ -58,14 +60,16 @@ const Logger = (props) => {
     );
   };
 
-  const onVideoModalOpen = (videoUrl) => {
+  const onVideoModalOpen = (videoUrl, telemtryURL) => {
     setVideoModalVisible(true);
     setSelectedVideoUrl(videoUrl);
+    setSelectedTelemetryUrl(telemtryURL);
   };
 
   const onVideoModalClose = () => {
     setVideoModalVisible(false);
     setSelectedVideoUrl(null);
+    setSelectedTelemetryUrl(null);
   };
 
   const onAddEventNote = async (eventId) => {
@@ -184,9 +188,9 @@ const Logger = (props) => {
       title: "",
       dataIndex: "video",
       key: "video",
-      render: (_, { videoUrl, thumbnailURL }) => {
+      render: (_, { videoUrl, thumbnailURL, telemtryURL }) => {
         return (
-          <Thumbnail onClick={() => onVideoModalOpen(videoUrl)}>
+          <Thumbnail onClick={() => onVideoModalOpen(videoUrl, telemtryURL)}>
             <ThumbnailImage src={thumbnailURL} />
             <PlayCircleOutlined />
           </Thumbnail>
@@ -216,16 +220,10 @@ const Logger = (props) => {
         title={"Event video"}
         destroyOnClose
       >
-        <StyledIframe
-          autoplay
-          allow="autoplay"
-          width="619"
-          height="350"
-          src={
-            selectedVideoUrl ||
-            "https://drone-guard-videos.s3-eu-west-1.amazonaws.com/uploads/converted.mp4"
-          } // TODO remove link
-        />
+        <StyledVideoTelemetry telemetryFile={selectedTelemetryUrl} />
+        <StyledVideo id="video" controls autoPlay width="600" height="300">
+          <source src={selectedVideoUrl} type="video/mp4" />
+        </StyledVideo>
       </StyledModal>
     </Container>
   );
@@ -278,7 +276,7 @@ const Thumbnail = styled.div`
   }
 `;
 
-const StyledIframe = styled.iframe`
+const StyledVideo = styled.video`
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -330,6 +328,13 @@ const ThumbnailImage = styled.img`
 
 const TextArea = styled.textarea`
   resize: none;
+`;
+
+const StyledVideoTelemetry = styled(VideoTelemetry)`
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
 `;
 
 export default Logger;

@@ -74,15 +74,13 @@ const Logger = (props) => {
 
   return isLoading ? (
     <Loader />
-  ) : !filteredBeachEvents.length ? (
-    <div>No data</div>
   ) : (
     <Container>
       <StyledInput
         placeholder={"Search by Life Guard..."}
         onChange={filterEventsByLifeGuard}
       />
-      {filteredBeachEvents &&
+      {filteredBeachEvents && filteredBeachEvents.length ? (
         filteredBeachEvents.map((event, i) => [
           i !== 0 && <Divider />,
           <Event
@@ -91,7 +89,10 @@ const Logger = (props) => {
             onVideoModalOpen={onVideoModalOpen}
             fetchEvents={fetchEvents}
           />,
-        ])}
+        ])
+      ) : (
+        <div>No data</div>
+      )}
 
       <StyledModal
         onCancel={onVideoModalClose}

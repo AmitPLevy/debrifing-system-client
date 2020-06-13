@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { _delete, _get, _post } from "../axios";
+import { _get } from "../axios";
 import Promise from "bluebird";
 import Loader from "../components/general/Loader";
-import { Button, Modal, Popconfirm, Popover, Table, Tooltip } from "antd";
-import moment from "moment";
-import EditIcon from "../assets/edit-tools.svg";
-import TrashIcon from "../assets/send-to-trash.svg";
-import { PlayCircleOutlined } from "@ant-design/icons";
-import { StyledText } from "./Debriefing";
+import { Input, Modal, Table } from "antd";
 import VideoTelemetry from "components/events/VideoTelemetry";
+import Event from "components/events/Event";
 
-import background from '../assets/home_bg.png';
+import background from "../assets/home_bg.png";
 
 const Logger = (props) => {
   const selectedBeach = props.history.location.state;
   const [isLoading, setIsLoading] = useState(true);
   const [beachEvents, setBeachEvents] = useState([]);
+  const [filteredBeachEvents, setFilteredBeachEvents] = useState([]);
   const [beachLifeGuards, setBeachLifeGuards] = useState([]);
   const [videoModalVisible, setVideoModalVisible] = useState(false);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState(null);
   const [selectedTelemetryUrl, setSelectedTelemetryUrl] = useState(null);
-  const [notePopOverVisible, setNotePopOverVisible] = useState(false);
-  const [visibleNoteKey, setVisibleNoteKey] = useState(null);
-  const [note, setNote] = useState(null);
 
   const fetchEvents = () => {
     setIsLoading(true);
@@ -32,6 +26,10 @@ const Logger = (props) => {
       setIsLoading(false);
     });
   };
+
+  useEffect(() => {
+    setFilteredBeachEvents(beachEvents);
+  }, [beachEvents]);
 
   useEffect(() => {
     const lifeGuards = [];
@@ -44,16 +42,6 @@ const Logger = (props) => {
     });
     fetchEvents();
   }, []);
-
-  const getDurationInMinutes = (startTime, endTime) => {
-    return moment
-      .duration(
-        moment(endTime, "YYYY/MM/DD HH:mm").diff(
-          moment(startTime, "YYYY/MM/DD HH:mm")
-        )
-      )
-      .asMinutes();
-  };
 
   const getLifeGuardById = (id) => {
     return (
@@ -74,146 +62,36 @@ const Logger = (props) => {
     setSelectedTelemetryUrl(null);
   };
 
-  const onAddEventNote = async (eventId) => {
-    setNotePopOverVisible(false);
-    setVisibleNoteKey(null);
-    await _post("/addEventNote", {
-      note,
-      eventId,
+  const filterEventsByLifeGuard = (e) => {
+    const query = e.target.value;
+    let filteredArray = [...beachEvents];
+    filteredArray = filteredArray.filter((event) => {
+      const lifeGuard = getLifeGuardById(event.lifeGuardId);
+      return lifeGuard.name.toLowerCase().includes(query.toLowerCase());
     });
-    setNote(null);
-    fetchEvents();
+    setFilteredBeachEvents(filteredArray);
   };
-
-  const removeEvent = async (eventId) => {
-    await _delete(`removeEvent/${eventId}`);
-    fetchEvents();
-  };
-
-  const columns = [
-    {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
-      render: (_, { startTime }) => moment(startTime).format("MMM DD, YYYY"),
-      sorter: (a, b) => moment(a.startTime) - moment(b.startTime),
-    },
-    {
-      title: "Start time",
-      dataIndex: "startTime",
-      key: "startTime",
-      render: (_, { startTime }) => moment(startTime).format("HH:mm"),
-    },
-    {
-      title: "End time",
-      dataIndex: "endTime",
-      key: "endTime",
-      render: (_, { endTime }) => moment(endTime).format("HH:mm"),
-    },
-    {
-      title: "Duration",
-      dataIndex: "duration",
-      key: "duration",
-      render: (_, { startTime, endTime }) => {
-        return `${getDurationInMinutes(startTime, endTime)} Minutes`;
-      },
-      sorter: (a, b) => {
-        const aMinutes = getDurationInMinutes(a.startTime, a.endTime);
-        const bMinutes = getDurationInMinutes(b.startTime, b.endTime);
-        return bMinutes - aMinutes;
-      },
-    },
-    {
-      title: "Life Guard",
-      dataIndex: "lifeGuard",
-      key: "lifeGuard",
-      render: (_, { lifeGuardId }) => {
-        const lifeGuard = getLifeGuardById(lifeGuardId);
-        return lifeGuard && lifeGuard.name;
-      },
-      sorter: (a, b) => {
-        const aLifeGuard = getLifeGuardById(a.lifeGuardId);
-        const bLifeGuard = getLifeGuardById(b.lifeGuardId);
-        return !aLifeGuard || !bLifeGuard
-          ? -1
-          : aLifeGuard.name > bLifeGuard.name;
-      },
-    },
-    {
-      title: "",
-      dataIndex: "buttons",
-      key: "buttons",
-      render: (_, { note, _id }) => {
-        return (
-          <ButtonsContainer>
-            <Popover
-              trigger="click"
-              title={note ? "Edit note" : "Add note to event"}
-              visible={visibleNoteKey === _id && notePopOverVisible}
-              placement={"bottom"}
-              content={
-                <NoteContainer>
-                  <TextArea onChange={(e) => setNote(e.target.value)}>
-                    {note}
-                  </TextArea>
-                  <StyledButton onClick={() => onAddEventNote(_id)}>
-                    save note
-                  </StyledButton>
-                </NoteContainer>
-              }
-              onVisibleChange={() =>
-                visibleNoteKey === _id &&
-                setNotePopOverVisible(!notePopOverVisible)
-              }
-            >
-              <StyledImage
-                src={EditIcon}
-                onClick={() => {
-                  setNotePopOverVisible(true);
-                  setVisibleNoteKey(_id);
-                }}
-              />
-            </Popover>
-
-            <Popconfirm
-              title={"are you sure you want to remove this event?"}
-              onConfirm={() => removeEvent(_id)}
-            >
-              <StyledImage src={TrashIcon} />
-            </Popconfirm>
-          </ButtonsContainer>
-        );
-      },
-      width: 120,
-    },
-    {
-      title: "",
-      dataIndex: "video",
-      key: "video",
-      render: (_, { videoUrl, thumbnailURL, telemtryURL }) => {
-        return (
-          <Thumbnail onClick={() => onVideoModalOpen(videoUrl, telemtryURL)}>
-            <ThumbnailImage src={thumbnailURL} />
-            <PlayCircleOutlined />
-          </Thumbnail>
-        );
-      },
-      width: 150,
-    },
-  ];
 
   return isLoading ? (
     <Loader />
+  ) : !filteredBeachEvents.length ? (
+    <div>No data</div>
   ) : (
     <Container>
-      <StyledText>Events- {selectedBeach.name} beach</StyledText>
-
-      <StyledTable
-        columns={columns}
-        dataSource={beachEvents}
-        pagination={false}
-        // expandedRowRender={(event) => <ExpandedEvent event={event} />}
+      <StyledInput
+        placeholder={"Search by Life Guard..."}
+        onChange={filterEventsByLifeGuard}
       />
+      {filteredBeachEvents &&
+        filteredBeachEvents.map((event, i) => [
+          i !== 0 && <Divider />,
+          <Event
+            event={event}
+            lifeGuard={getLifeGuardById(event.lifeGuardId)}
+            onVideoModalOpen={onVideoModalOpen}
+            fetchEvents={fetchEvents}
+          />,
+        ])}
 
       <StyledModal
         onCancel={onVideoModalClose}
@@ -238,26 +116,15 @@ const StyledModal = styled(Modal)`
   // transform: translateY(-50%);
 `;
 
-const StyledImage = styled.img`
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-`;
-
-const ButtonsContainer = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-`;
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   // height: auto;
   // background: #f3f3f3;
-  background: rgba(0, 0, 150, .1);
+  background: rgba(0, 0, 150, 0.1);
   // background: rgba(0, 0, 160, .4);
-  // padding: 0px 20px;
+  // padding: 40px;
 `;
 
 const Thumbnail = styled.div`
@@ -305,7 +172,7 @@ const StyledTable = styled(Table)`
     border-bottom: 1px solid #cccccc !important;
     color: #000;
   }
-  
+
   table {
     background: transparent !important;
     border-radius: 4px;
@@ -316,32 +183,9 @@ const StyledTable = styled(Table)`
   }
 `;
 
-const NoteContainer = styled.div`
-  width: 280px;
-  height: 160px;
-  display: flex;
-  flex-direction: column;
-
-  textarea {
-    height: 100px;
-    border-radius: 4px;
-  }
-`;
-
-const StyledButton = styled(Button)`
-  margin-top: 20px;
-  width: 100px;
-  align-self: flex-end;
-  border-radius: 4px;
-`;
-
 const ThumbnailImage = styled.img`
   width: 100%;
   height: 100%;
-`;
-
-const TextArea = styled.textarea`
-  resize: none;
 `;
 
 const StyledVideoTelemetry = styled(VideoTelemetry)`
@@ -351,5 +195,13 @@ const StyledVideoTelemetry = styled(VideoTelemetry)`
   transform: translateX(-50%);
   font-size: 16px;
 `;
+
+const Divider = styled.div`
+  background-color: red;
+  height: 1px;
+  width: 100%;
+`;
+
+const StyledInput = styled(Input)``;
 
 export default Logger;

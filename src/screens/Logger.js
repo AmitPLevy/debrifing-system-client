@@ -11,6 +11,8 @@ import { PlayCircleOutlined } from "@ant-design/icons";
 import { StyledText } from "./Debriefing";
 import VideoTelemetry from "components/events/VideoTelemetry";
 
+import background from '../assets/home_bg.png';
+
 const Logger = (props) => {
   const selectedBeach = props.history.location.state;
   const [isLoading, setIsLoading] = useState(true);
@@ -217,11 +219,11 @@ const Logger = (props) => {
         onCancel={onVideoModalClose}
         visible={videoModalVisible}
         footer={null}
-        title={"Event video"}
+        // title={"Event video"}
         destroyOnClose
       >
         <StyledVideoTelemetry telemetryFile={selectedTelemetryUrl} />
-        <StyledVideo id="video" controls autoPlay width="600" height="300">
+        <StyledVideo id="video" controls autoPlay>
           <source src={selectedVideoUrl} type="video/mp4" />
         </StyledVideo>
       </StyledModal>
@@ -230,8 +232,10 @@ const Logger = (props) => {
 };
 
 const StyledModal = styled(Modal)`
-  width: 50% !important;
+  width: 80% !important;
   position: relative;
+  // top: 50%;
+  // transform: translateY(-50%);
 `;
 
 const StyledImage = styled.img`
@@ -249,15 +253,17 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: auto;
-  background: #f3f3f3;
-  padding: 0px 20px;
+  // height: auto;
+  // background: #f3f3f3;
+  background: rgba(0, 0, 150, .1);
+  // background: rgba(0, 0, 160, .4);
+  // padding: 0px 20px;
 `;
 
 const Thumbnail = styled.div`
   background-size: cover;
-  height: 100px;
-  width: 150px;
+  width: 160px;
+  height: 90px;
   cursor: pointer;
   position: relative;
 
@@ -278,27 +284,35 @@ const Thumbnail = styled.div`
 
 const StyledVideo = styled.video`
   position: relative;
+  width: 95%;
   left: 50%;
   transform: translateX(-50%);
 `;
 
 const StyledTable = styled(Table)`
+  .ant-table {
+    background: transparent !important;
+  }
   width: 95%;
   border-radius: 4px;
   td,
   tr,
   th {
-    font-size: 15px;
-    background-color: #f3f3f3 !important;
+    font-size: 18px;
+    // background-color: #f3f3f3 !important;
+    background: transparent !important;
     text-align: center !important;
     border-bottom: 1px solid #cccccc !important;
+    color: #000;
   }
-
+  
   table {
+    background: transparent !important;
     border-radius: 4px;
     border-right: 1px solid #cccccc;
     border-left: 1px solid #cccccc;
     border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
   }
 `;
 
@@ -335,6 +349,7 @@ const StyledVideoTelemetry = styled(VideoTelemetry)`
   top: 80px;
   left: 50%;
   transform: translateX(-50%);
+  font-size: 16px;
 `;
 
 export default Logger;

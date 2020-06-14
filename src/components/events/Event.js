@@ -56,12 +56,14 @@ const Event = ({ event, onVideoModalOpen, lifeGuard, fetchEvents }) => {
         <TextContainer>
           <StyledText>Life Guard - {lifeGuard && lifeGuard.name}</StyledText>
           <h3>Date - {moment(event.startTime).format("MMM DD, YYYY")}</h3>
-          <h3>
-            Duration - {getDurationInMinutes(startTime, endTime)} Minutes (
-            {moment(startTime).format("HH:mm")}-
-            {moment(endTime).format("HH:mm")})
-          </h3>
-          <h3>{note ? "Note - " + note : "No note available"}</h3>
+          <View>
+            <h3>
+              Duration - {getDurationInMinutes(startTime, endTime)} Minutes (
+              {moment(startTime).format("HH:mm")}-
+              {moment(endTime).format("HH:mm")})
+            </h3>
+            <h3>{note ? note : "No note available"}</h3>
+          </View>
         </TextContainer>
       </LeftPart>
       <ButtonsContainer>
@@ -106,8 +108,8 @@ const Event = ({ event, onVideoModalOpen, lifeGuard, fetchEvents }) => {
 
 const Thumbnail = styled.div`
   background-size: cover;
-  height: 140px;
-  width: 250px;
+  width: 240px;
+  height: 135px;
   cursor: pointer;
   position: relative;
 
@@ -133,13 +135,17 @@ const ThumbnailImage = styled.img`
 
 const EventContainer = styled.div`
   display: flex;
-  padding: 20px;
-  width: 100%;
   justify-content: space-between;
+  width: 100%;
+  padding: 15px 0;
 `;
 
-const StyledText = styled.h1`
-  font-size: 17px;
+const StyledText = styled.h2`
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: normal !important;
 `;
 
 const TextArea = styled.textarea`
@@ -168,7 +174,8 @@ const StyledButton = styled(Button)`
 const ButtonsContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-end;
+  width: 100px;
 `;
 
 const StyledImage = styled.img`
@@ -179,8 +186,29 @@ const StyledImage = styled.img`
 `;
 
 const TextContainer = styled.div`
-  margin-left: 30px;
-  margin-top: 5px;
+  // width: 100%;
+  margin-left: 20px;
+  // margin-top: 5px;
+  
+  h3 {
+    font-size: 15px;
+    color: rgba(0, 0, 0, .3);
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+`;
+
+const View = styled.div`
+  margin-top: 10px;
+  
+  h3 {
+    font-size: 17px;
+    color: rgba(0, 0, 0, .5);
+    // width: 50%;
+    overflow: hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+  }
 `;
 
 const LeftPart = styled.div`

@@ -113,19 +113,16 @@ const Logger = (props) => {
 const StyledModal = styled(Modal)`
   width: 80% !important;
   position: relative;
-  // top: 50%;
-  // transform: translateY(-50%);
+  top: 50%;
+  transform: translateY(-50%);
 `;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  // height: auto;
-  // background: #f3f3f3;
-  background: rgba(0, 0, 150, 0.1);
-  // background: rgba(0, 0, 160, .4);
-  // padding: 40px;
+  // align-items: flex-start;
+  width: 90%;
+  margin: 0 auto;
 `;
 
 const Thumbnail = styled.div`
@@ -198,11 +195,27 @@ const StyledVideoTelemetry = styled(VideoTelemetry)`
 `;
 
 const Divider = styled.div`
-  background-color: red;
+  margin: 0 auto;
+  background-color: rgba(150, 150, 150, .4);
   height: 1px;
   width: 100%;
 `;
 
-const StyledInput = styled(Input)``;
+const StyledInput = styled(Input)`
+  margin-top: 20px;
+  padding: 8px;
+  width: 200px;
+  border-color: rgba(0, 0, 0, .5);
+  border-radius: 4px;
+  background-color: transparent;
+  
+  :hover {
+    border-color: transparent;
+  }
+  
+  ::placeholder {
+    color: rgba(0, 0, 0, .5);
+  }
+`;
 
 export default Logger;

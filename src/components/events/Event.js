@@ -46,6 +46,24 @@ const Event = ({ event, onVideoModalOpen, lifeGuard, fetchEvents }) => {
       .asMinutes();
   };
 
+  const getDurationInSeconds = (startTime, endTime) => {
+    return moment
+      .duration(
+        moment(endTime, "YYYY/MM/DD HH:mm:ss").diff(
+          moment(startTime, "YYYY/MM/DD HH:mm:ss")
+        )
+      )
+      .asSeconds();
+  };
+
+  const durationInMinutes =
+    getDurationInMinutes(startTime, endTime) > 0 &&
+    `${getDurationInMinutes(startTime, endTime)} Minutes`;
+
+  const durationInSeconds =
+    getDurationInSeconds(startTime, endTime) > 0 &&
+    `${getDurationInSeconds(startTime, endTime)} Seconds`;
+
   return (
     <EventContainer>
       <LeftPart>
@@ -58,9 +76,9 @@ const Event = ({ event, onVideoModalOpen, lifeGuard, fetchEvents }) => {
           <h3>Date - {moment(event.startTime).format("MMM DD, YYYY")}</h3>
           <View>
             <h3>
-              Duration - {getDurationInMinutes(startTime, endTime)} Minutes (
-              {moment(startTime).format("HH:mm")}-
-              {moment(endTime).format("HH:mm")})
+              Duration - {durationInMinutes} {durationInMinutes ? "," : ""}{" "}
+              {durationInSeconds} ({moment(startTime).format("HH:mm:ss")}-
+              {moment(endTime).format("HH:mm:ss")})
             </h3>
             <div>{note ? note : "No note available"}</div>
           </View>

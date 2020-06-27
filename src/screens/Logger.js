@@ -83,19 +83,21 @@ const Logger = (props) => {
         placeholder={"Search by Life Guard..."}
         onChange={filterEventsByLifeGuard}
       />
-      {filteredBeachEvents && filteredBeachEvents.length ? (
-        filteredBeachEvents.map((event, i) => [
-          i !== 0 && <Divider />,
-          <Event
-            event={event}
-            lifeGuard={getLifeGuardById(event.lifeGuardId)}
-            onVideoModalOpen={onVideoModalOpen}
-            fetchEvents={fetchEvents}
-          />,
-        ])
-      ) : (
-        <StyledNoData>No events...</StyledNoData>
-      )}
+      <Events>
+        {filteredBeachEvents && filteredBeachEvents.length ? (
+          filteredBeachEvents.map((event, i) => [
+            <Event
+              event={event}
+              lifeGuard={getLifeGuardById(event.lifeGuardId)}
+              onVideoModalOpen={onVideoModalOpen}
+              fetchEvents={fetchEvents}
+            />,
+            <Divider />,
+          ])
+        ) : (
+          <StyledNoData>No events...</StyledNoData>
+        )}
+      </Events>
 
       <StyledModal
         onCancel={onVideoModalClose}
@@ -174,6 +176,10 @@ const StyledNoData = styled.div`
   font-size: 20px;
   margin-top: 60px;
   font-weight: bold;
+`;
+
+const Events = styled.div`
+  margin-top: 30px;
 `;
 
 export default Logger;

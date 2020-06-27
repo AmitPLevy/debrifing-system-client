@@ -6,7 +6,6 @@ import { useAuth } from "../../context/auth";
 import { Avatar, Dropdown, Menu } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
-
 const Header = ({ className }) => {
   const { setAuthToken } = useAuth();
   const history = useHistory();
@@ -50,9 +49,7 @@ const StyledHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 20px 0;
-  // background-color: rgba(100, 100, 100, 1);
-  // background-color: #f3f3f3;
-  background: #f3f3f3;
+  background-color: #f3f3f3;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   position: fixed;
 `;

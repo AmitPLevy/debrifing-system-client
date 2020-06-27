@@ -23,12 +23,12 @@ const Logger = (props) => {
     setIsLoading(true);
     _get(`/events/${selectedBeach._id}`).then((response) => {
       setBeachEvents(response.data);
-      setIsLoading(false);
     });
   };
 
   useEffect(() => {
     setFilteredBeachEvents(beachEvents);
+    setIsLoading(false);
   }, [beachEvents]);
 
   useEffect(() => {
@@ -38,7 +38,6 @@ const Logger = (props) => {
       lifeGuards.push(...response.data);
     }).then(() => {
       setBeachLifeGuards(lifeGuards);
-      setIsLoading(false);
     });
     fetchEvents();
   }, []);
@@ -67,7 +66,11 @@ const Logger = (props) => {
     let filteredArray = [...beachEvents];
     filteredArray = filteredArray.filter((event) => {
       const lifeGuard = getLifeGuardById(event.lifeGuardId);
-      return lifeGuard.name.toLowerCase().includes(query.toLowerCase());
+      return (
+        lifeGuard &&
+        lifeGuard.name &&
+        lifeGuard.name.toLowerCase().includes(query.toLowerCase())
+      );
     });
     setFilteredBeachEvents(filteredArray);
   };
@@ -91,14 +94,13 @@ const Logger = (props) => {
           />,
         ])
       ) : (
-        <div>No data</div>
+        <StyledNoData>No events...</StyledNoData>
       )}
 
       <StyledModal
         onCancel={onVideoModalClose}
         visible={videoModalVisible}
         footer={null}
-        // title={"Event video"}
         destroyOnClose
       >
         <StyledVideoTelemetry telemetryFile={selectedTelemetryUrl} />
@@ -120,31 +122,11 @@ const StyledModal = styled(Modal)`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  // align-items: flex-start;
-  width: 90%;
+  width: 100%;
+  padding: 0 70px;
   margin: 0 auto;
-`;
-
-const Thumbnail = styled.div`
-  background-size: cover;
-  width: 160px;
-  height: 90px;
-  cursor: pointer;
-  position: relative;
-
-  svg {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    opacity: 0.7;
-
-    path {
-      fill: #fff;
-    }
-  }
+  overflow-y: auto;
+  background-color: #f3f3f3;
 `;
 
 const StyledVideo = styled.video`
@@ -152,38 +134,6 @@ const StyledVideo = styled.video`
   width: 95%;
   left: 50%;
   transform: translateX(-50%);
-`;
-
-const StyledTable = styled(Table)`
-  .ant-table {
-    background: transparent !important;
-  }
-  width: 95%;
-  border-radius: 4px;
-  td,
-  tr,
-  th {
-    font-size: 18px;
-    // background-color: #f3f3f3 !important;
-    background: transparent !important;
-    text-align: center !important;
-    border-bottom: 1px solid #cccccc !important;
-    color: #000;
-  }
-
-  table {
-    background: transparent !important;
-    border-radius: 4px;
-    border-right: 1px solid #cccccc;
-    border-left: 1px solid #cccccc;
-    border-top: 1px solid #cccccc;
-    border-bottom: 1px solid #cccccc;
-  }
-`;
-
-const ThumbnailImage = styled.img`
-  width: 100%;
-  height: 100%;
 `;
 
 const StyledVideoTelemetry = styled(VideoTelemetry)`
@@ -196,7 +146,7 @@ const StyledVideoTelemetry = styled(VideoTelemetry)`
 
 const Divider = styled.div`
   margin: 0 auto;
-  background-color: rgba(150, 150, 150, .4);
+  background-color: rgba(150, 150, 150, 0.4);
   height: 1px;
   width: 100%;
 `;
@@ -205,17 +155,25 @@ const StyledInput = styled(Input)`
   margin-top: 20px;
   padding: 8px;
   width: 200px;
-  border-color: rgba(0, 0, 0, .5);
+  border-color: rgba(0, 0, 0, 0.5);
   border-radius: 4px;
   background-color: transparent;
-  
+
   :hover {
     border-color: transparent;
   }
-  
+
   ::placeholder {
-    color: rgba(0, 0, 0, .5);
+    color: rgba(0, 0, 0, 0.5);
   }
+`;
+
+const StyledNoData = styled.div`
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin-top: 60px;
+  font-weight: bold;
 `;
 
 export default Logger;

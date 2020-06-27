@@ -62,7 +62,7 @@ const Event = ({ event, onVideoModalOpen, lifeGuard, fetchEvents }) => {
               {moment(startTime).format("HH:mm")}-
               {moment(endTime).format("HH:mm")})
             </h3>
-            <h3>{note ? note : "No note available"}</h3>
+            <div>{note ? note : "No note available"}</div>
           </View>
         </TextContainer>
       </LeftPart>
@@ -182,17 +182,15 @@ const StyledImage = styled.img`
   cursor: pointer;
   width: 25px;
   height: 25px;
-  //margin-top: 5px;
 `;
 
 const TextContainer = styled.div`
-  // width: 100%;
   margin-left: 20px;
-  // margin-top: 5px;
-  
+  flex: 1;
+
   h3 {
     font-size: 15px;
-    color: rgba(0, 0, 0, .3);
+    color: rgba(0, 0, 0, 0.3);
     margin: 0 !important;
     padding: 0 !important;
   }
@@ -200,19 +198,19 @@ const TextContainer = styled.div`
 
 const View = styled.div`
   margin-top: 10px;
-  
+
   h3 {
     font-size: 17px;
-    color: rgba(0, 0, 0, .5);
-    // width: 50%;
+    color: rgba(0, 0, 0, 0.5);
     overflow: hidden;
-    white-space: nowrap; 
+    white-space: nowrap;
     text-overflow: ellipsis;
   }
 `;
 
 const LeftPart = styled.div`
   display: flex;
+  flex: 1;
 `;
 
 export default Event;

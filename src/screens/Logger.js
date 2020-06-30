@@ -18,6 +18,7 @@ const Logger = (props) => {
   const [videoModalVisible, setVideoModalVisible] = useState(false);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState(null);
   const [selectedTelemetryUrl, setSelectedTelemetryUrl] = useState(null);
+  const [selectedLoggerUrl, setSelectedLoggerUrl] = useState(null);
 
   const fetchEvents = () => {
     setIsLoading(true);
@@ -49,16 +50,18 @@ const Logger = (props) => {
     );
   };
 
-  const onVideoModalOpen = (videoUrl, telemtryURL) => {
+  const onVideoModalOpen = (videoUrl, telemtryURL, loggerUrl) => {
     setVideoModalVisible(true);
     setSelectedVideoUrl(videoUrl);
     setSelectedTelemetryUrl(telemtryURL);
+    setSelectedLoggerUrl(loggerUrl);
   };
 
   const onVideoModalClose = () => {
     setVideoModalVisible(false);
     setSelectedVideoUrl(null);
     setSelectedTelemetryUrl(null);
+    setSelectedLoggerUrl(null);
   };
 
   const filterEventsByLifeGuard = (e) => {
@@ -105,8 +108,8 @@ const Logger = (props) => {
         footer={null}
         destroyOnClose
       >
-        <StyledVideoTelemetry telemetryFile={selectedTelemetryUrl} />
-        <StyledVideo id="video" controls autoPlay>
+        <StyledVideoTelemetry telemetryFile={selectedTelemetryUrl} loggerFile={selectedLoggerUrl} />
+        <StyledVideo id="video" controls autoPlay muted>
           <source src={selectedVideoUrl} type="video/mp4" />
         </StyledVideo>
       </StyledModal>
@@ -140,7 +143,6 @@ const StyledVideo = styled.video`
 
 const StyledVideoTelemetry = styled(VideoTelemetry)`
   position: absolute;
-  top: 80px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 16px;

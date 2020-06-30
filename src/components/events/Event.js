@@ -12,6 +12,7 @@ const Event = ({ event, onVideoModalOpen, lifeGuard, fetchEvents }) => {
     videoUrl,
     telemtryURL,
     thumbnailURL,
+    loggerURL,
     _id,
     startTime,
     endTime,
@@ -67,7 +68,9 @@ const Event = ({ event, onVideoModalOpen, lifeGuard, fetchEvents }) => {
   return (
     <EventContainer>
       <LeftPart>
-        <Thumbnail onClick={() => onVideoModalOpen(videoUrl, telemtryURL)}>
+        <Thumbnail
+          onClick={() => onVideoModalOpen(videoUrl, telemtryURL, loggerURL)}
+        >
           <ThumbnailImage src={thumbnailURL} />
           <PlayCircleOutlined />
         </Thumbnail>
